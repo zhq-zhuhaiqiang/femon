@@ -1,0 +1,258 @@
+#include("header.html")
+<!--#set($layout =  "layout.vm" )-->
+<!--#set($sub=  "sidebar.vm"  )-->
+<!-- page content -->
+<div class="right_col" role="main">
+    <div class="x_panel">
+        <!--<div class="x_title"><h2>查询条件</h2>-->
+        <!--<div class="clearfix"></div>-->
+        <!--</div>-->
+        <div class="x_content">
+
+            <form id="queryForm" class="form-inline" role="form">
+                <div class="row">
+                    <div class="form-group col-md-2 ">
+                        <label class="control-label" for="name"  style="padding-left: 30px;">姓名：</label>
+                        <input type="text" id="name" name="name" class="form-control" placeholder="">
+                        <label class="control-label" for="idNum">身份证号：</label>
+                        <input type="text" id="idNum" name="idNum" class="form-control" placeholder="">
+                        <!--<label class="control-label" for="methodName"></label>-->
+                        <!--<input type="text" id="methodName" name="methodName" class="form-control" placeholder="enter methodName">-->
+                    </div>
+                </div>
+                <div style="height: 10px"></div>
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <input type="hidden" id="apiId" />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="button" id="reset" class="btn btn-info"  value="清除"></input>
+                        <input type="button" id="query" class="btn btn-success" value="查询"></input>
+                        <a href="/download">
+                            <input type="button" id="export" class="btn btn-success" value="导出"></input>
+                        </a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <div class="x_panel">
+        <!--<div class="x_title">-->
+            <!--<h2>查询结果</h2>-->
+            <!--<div class="clearfix"></div>-->
+        <!--</div>-->
+        <div class="x_content">
+
+            <table id="table" class="table table-striped table-bordered">
+                <!--<thead>-->
+                <!--<tr>-->
+                    <!--<th width="50">序号</th>-->
+                    <!--<th width="80">姓名</th>-->
+                    <!--<th width="150">身份证号</th>-->
+                    <!--<th width="200">状态</th>-->
+                    <!--<th width="200">录入时间</th>-->
+                    <!--&lt;!&ndash;<th width="80">详情</th>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<th width="120" colspan="2">数据统计</th>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<th width="80">操作</th>&ndash;&gt;-->
+                <!--</tr>-->
+                <!--</thead>-->
+                <!--<tbody>-->
+                <!--#set($count = 0)-->
+                <!--#foreach ($c in $serviceList)-->
+                <!--#set($count = $!count + 1)-->
+                <!--&lt;!&ndash;#set($output = $c.expect)&ndash;&gt;-->
+                <!--<tr>-->
+                    <!--<td>$count</td>-->
+                    <!--&lt;!&ndash;#if($c.state==1)&ndash;&gt;-->
+                    <!--&lt;!&ndash;<td><p class="btn btn-success">正常</p></td> #else&ndash;&gt;-->
+                    <!--&lt;!&ndash;<td><p class="btn btn-danger">失败</p></td> #end&ndash;&gt;-->
+                    <!--<td>$!c.name</td>-->
+                    <!--<td>$!c.idNum</td>-->
+                    <!--<td>$!c.status</td>-->
+                    <!--<td>$!c.createTime</td>-->
+                    <!--&lt;!&ndash;#if ( $output.length() < 20 )&ndash;&gt;-->
+                    <!--&lt;!&ndash;<td>$output</td> #else #set($outputMin = $output.substring(0, 20))&ndash;&gt;-->
+                    <!--&lt;!&ndash;<td>$outputMin...</td> #end&ndash;&gt;-->
+                    <!--&lt;!&ndash;<td><a href="/service/detail?serviceId=$c.id"&ndash;&gt;-->
+                           <!--&lt;!&ndash;class="btn btn-primary">查看</a></td>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<td><a href="/serviceHistoryChart/$c.id">监控</a></td>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<td><a href="/service/data?serviceId=$c.id">统计</a></td>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<td><a href="/service/editPage?serviceId=$c.id">编辑</a></td>&ndash;&gt;-->
+                <!--</tr>-->
+                <!--<div id="output-content$c.id" style="display: none;"></div>-->
+                <!--#end-->
+                <!--</tbody>-->
+            </table>
+        </div>
+    </div>
+</div>
+#include("footer.html")
+<script type="text/javascript">
+    $(function(){
+        var urlResource = {
+            query : function (param) {
+                $.get("/queryUserInfos", param, function (data) {
+                    showTable(data);
+                });
+            }
+            // queryApi: function(developerId){
+            //     var url = "/developers/" + developerId + "/apis"
+            //     $.get(url, function (data) {
+            //         $("#apiModal").modal('show');
+            //         showApiTable(data);
+            //     });
+            // },
+            // insert : function (param) {
+            //     $.ajax({
+            //         url: '/developers',
+            //         method: 'post',
+            //         contentType: 'application/json', // 这句不加出现415错误:Unsupported Media Type
+            //         data: JSON.stringify(param), // 以json字符串方式传递
+            //         success: function(data) {
+            //             $("#createModal").modal('hide');
+            //         },
+            //         error: function(data) {
+            //             console.log("error...");
+            //         }
+            //     });
+            // },
+            // insertApi : function (param) {
+            //     $.ajax({
+            //         url: "/developers/" +param[developerId] + "/apis",
+            //         method: 'post',
+            //         contentType: 'application/json', // 这句不加出现415错误:Unsupported Media Type
+            //         data: JSON.stringify(param), // 以json字符串方式传递
+            //         success: function(data) {
+            //             var developerId = $("#developerId").val();
+            //             urlResource.queryApi(developerId);
+            //         },
+            //         error: function(data) {
+            //             alert(data);
+            //         }
+            //     });
+            // }
+        };
+        $("#reset").click(function () {
+            $("#queryForm input[type='text']").val("");
+            initTable();
+        });
+
+        $("#query").click(function(){
+            initTable();
+        });
+        // $("#export").click(function(){
+        //     $.post("/download");
+        // });
+
+        $("#table").on('click', '.showApi', function(){
+            var developerId = $(this).attr("data-id");
+            $("#developerId").val(developerId);
+            urlResource.queryApi(developerId);
+        });
+
+        // $("#addApi").click(function(){
+        //     var param = {};
+        //     param['apiId'] = $("#apiId").val();
+        //     param['developerId'] = $("#developerId").val();
+        //     urlResource.insertApi(param);
+        // });
+
+        function showTable(data) {
+            $('#table').DataTable( {
+                "destroy": true,
+                "ordering": false,
+                "paging": false,
+                searching:false,
+                "data": data,
+                "columns": [
+                    { "data": "name", "title": "姓名" },
+                    { "data": "idNum", "title": "身份证号" },
+                    { "data": "status", "title": "状态" },
+                    { "data": "createTime", "title": "录入时间" ,
+                        "render": function ChangeDateFormat(date) {
+                            var dateee = new Date(date).toJSON();
+                            return new Date(+new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
+                        }}
+                ]
+            } );
+            $('#table').attr("style", "");
+        };
+
+
+        function initTable() {
+            var param = $("#queryForm").serialize();
+            urlResource.query(param);
+        };
+        initTable();
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // $("#reset").click(function () {
+    //     $("#queryForm input[type='text']").val("");
+    // });
+    // $("#query").on('click', function() {
+    //     // var serverId = parseInt($("select[name='p-server']").val());
+    //     var name = $("input[name='name']").val();
+    //     var idNum = $("input[name='idNum']").val();
+    //
+    //     //alert(serverId + "-" + processName);
+    //
+    //     $.post('/queryUserInfos', {
+    //         name : name,
+    //         idNum : idNum
+    //
+    // }, function(data) {
+    //         if (data){
+    //             alert(data);
+    //             showTable(data);
+    //         }
+    //             // window.location.href = '/process';
+    //         else{
+    //             alert("查询失败");
+    //         }
+    //
+    //     });
+    // });
+    // function showTable(data) {
+    //     $('#table').DataTable( {
+    //         "destroy": true,
+    //         "ordering": true,
+    //         "data": data,
+    //         "columns": [
+    //             { "data": "name"},
+    //             { "data": "idNum" },
+    //             { "data": "status"},
+    //             { "data": "creatTime"}
+    //         ]
+    //     } );
+    //     $('#table').attr("style", "");
+    // };
+</script>
+<!--<script src="/static/plugins/datatable/js/jquery.dataTables.min.js"></script>-->
+<!--<script src="/js/api.js"></script>-->
+<!-- /page content -->
