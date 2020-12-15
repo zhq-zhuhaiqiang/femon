@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>零星制卡数据勾兑</title>
+  <link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+  <style>
+    body {
+      margin: 10px;
+    }
+
+    .demo-carousel {
+      height: 200px;
+      line-height: 200px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layui-tab" lay-filter="demo">
+    <ul class="layui-tab-title">
+      <li class="layui-this">参保人制卡信心查询</li>
+      <li>回盘清单查询</li>
+    </ul>
+    <div class="layui-tab-content">
+      <div class="layui-tab-item layui-show demoTable">
+        <!-- <div class="demoTable"> -->
+        <div class="layui-inline">
+          <label class="layui-form-label"> 身份证号</label>
+          <div class="layui-input-inline">
+            <input type="tel" name="sfzh" id="sfzh" autocomplete="off" class="layui-input">
+          </div>
+
+        </div>
+        <div class="layui-inline">
+          <label class="layui-form-label"> 区域编码</label>
+          <div class="layui-input-inline">
+            <input type="tel" name="areaCode" id="areaCode" autocomplete="off" class="layui-input">
+          </div>
+
+        </div>
+        <div class="layui-inline">
+          <label class="layui-form-label"> 险种编码 </label>
+          <div class="layui-input-inline">
+            <input type="tel" name="ssqStatus" id="ssqStatus" autocomplete="off" class="layui-input">
+          </div>
+
+        </div>
+        <div class="layui-inline">
+          <label class="layui-form-label"> 银行编码</label>
+          <div class="layui-input-inline">
+            <input type="tel" name="banktype" id="banktype" autocomplete="off" class="layui-input">
+          </div>
+
+        </div>
+        <div class="layui-inline">
+          <label class="layui-form-label"> 银行卡号</label>
+          <div class="layui-input-inline">
+            <input type="tel" name="yhkh" id="yhkh" autocomplete="off" class="layui-input">
+          </div>
+
+        </div>
+        <div class="layui-inline">
+          <label class="layui-form-label"> 卡管状态</label>
+          <div class="layui-input-inline">
+            <input type="tel" name="kgStatus" id="kgStatus" autocomplete="off" class="layui-input">
+          </div>
+
+        </div>
+        <button class="layui-btn" data-type="reload">搜索</button>
+        <!-- </div> -->
+        <table class="layui-hide" id="LAY_table_user" lay-filter="user"></table>
+
+
+      </div>
+      <div class="layui-tab-item demoTable-backdata">
+        <div class="layui-inline">
+          <label class="layui-form-label"> 身份证号</label>
+          <div class="layui-input-inline">
+            <input type="tel" name="sfzh_back" id="sfzh_back" autocomplete="off" class="layui-input">
+          </div>
+
+        </div>
+        <div class="layui-inline">
+          <label class="layui-form-label"> 卡识别码</label>
+          <div class="layui-input-inline">
+            <input type="tel" name="ksbm_back" id="ksbm_back" autocomplete="off" class="layui-input">
+          </div>
+
+        </div>
+        <div class="layui-inline">
+          <label class="layui-form-label"> 卡管银行卡号 </label>
+          <div class="layui-input-inline">
+            <input type="tel" name="backYhkh_back" id="backYhkh_back" autocomplete="off" class="layui-input">
+          </div>
+
+        </div>
+        <div class="layui-inline">
+          <label class="layui-form-label"> 银行卡号</label>
+          <div class="layui-input-inline">
+            <input type="tel" name="yhkh_back" id="yhkh_back" autocomplete="off" class="layui-input">
+          </div>
+
+        </div>
+        <div class="layui-inline">
+          <label class="layui-form-label"> 银行类别</label>
+          <div class="layui-input-inline">
+            <input type="tel" name="banktype_back" id="banktype_back" autocomplete="off" class="layui-input">
+          </div>
+
+        </div>
+        <div class="layui-inline">
+          <label class="layui-form-label"> 卡管状态</label>
+          <div class="layui-input-inline">
+            <input type="tel" name="kgStatus_back" id="kgStatus_back" autocomplete="off" class="layui-input">
+          </div>
+
+        </div>
+        <div class="layui-inline">
+          <label class="layui-form-label"> 时间起止</label>
+          <div class="layui-input-inline">
+            <input type="text" class="layui-input" id="datetimeinfo" placeholder="--">
+          </div>
+        </div>
+        <button class="layui-btn" data-type="reload">搜索</button>
+        <table class="layui-hide" id="LAY_table_BackData" lay-filter="user"></table>
+      </div>
+    </div>
+  </div>
+
+  <script src="../layui/layui.all.js"></script>
+  <script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+      <button class="layui-btn layui-btn-sm" lay-event="export">导出</button>
+      <button type="button" class="layui-btn" id="test3"><i class="layui-icon"></i>上传文件</button>
+      <!--<div class="layui-upload-drag" id="uploadDemo">-->
+        <!--<button class="layui-btn layui-btn-sm" >导入</button>-->
+        <!--&lt;!&ndash;<i class="layui-icon"></i>&ndash;&gt;-->
+        <!--&lt;!&ndash;<p>点击上传，或将文件拖拽到此处</p>&ndash;&gt;-->
+        <!--<div class="layui-hide" id="uploadDemoView">-->
+          <!--<hr>-->
+          <!--<img src="" alt="上传成功后渲染" style="max-width: 100%">-->
+        <!--</div>-->
+      <!--</div>-->
+    </div>
+  </script>
+  <script>
+
+    // layui.config({
+    //   version: '1596625002440' //为了更新 js 缓存，可忽略
+    // });
+
+    layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element', 'slider'], function() {
+      var laydate = layui.laydate //日期
+        ,
+        laypage = layui.laypage //分页
+        ,
+        layer = layui.layer //弹层
+        ,
+        table = layui.table //表格
+        ,
+        carousel = layui.carousel //轮播
+        ,
+        upload = layui.upload //上传
+        ,
+        element = layui.element //元素操作
+        ,
+        slider = layui.slider //滑块
+
+      //监听Tab切换
+      var tableIns;
+      var tableBackDataInfo;
+      var startDatepa;
+      var endDatepa;
+      element.on('tab(demo)', function(data) {
+        var tabindex = data.index;
+        if (tabindex == 1) {
+          tableBackDataInfo = table.render({
+            elem: '#LAY_table_BackData',
+            height: 420,
+            url: 'http://127.0.0.1:7001/iface/machine/DealPersonInfosHandle?backinfo=yes', //数据接口
+            //,where: {sfzh: '612524196805190624', banktype: 'YC', ssqStatus:  '10', areaCode:  '611023', yhkh:  '6217977900064090784'}
+            title: '回执单',
+            response: {
+              statusCode: 200 //重新规定成功的状态码为 200，table 组件默认为 0
+            },
+            method: 'post',
+            id: 'testBackReload',
+            parseData: function(res) { //res 即为原始返回的数据
+              return {
+                "code": res.statusCode, //解析接口状态
+                "msg": res.message, //解析提示文本
+                "count": res.data.count, //解析数据长度
+                "data": res.data.data //解析数据列表
+              };
+            },
+            page: true, //开启分页
+
+            // limit: 2000,
+            toolbar: "" //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+              ,
+            defaultToolbar: ['exports', {
+              title: '提示' //标题
+                ,
+              layEvent: 'LAYTABLE_TIPS_back' //事件名，用于 toolbar 事件中使用
+                ,
+              icon: 'layui-icon-tips' //图标类名
+            }],
+            totalRow: false //开启合计行
+              ,
+            cols: [
+              [ //表头
+                {
+                  type: 'checkbox',
+                  fixed: 'left'
+                }, {
+                  field: 'id',
+                  title: 'ID',
+                  //  width: 80,
+                  sort: true,
+                  fixed: 'left',
+                  totalRowText: '合计：'
+                }, {
+                  field: 'XM',
+                  title: '姓名',
+                  //width: 90,
+                  sort: true,
+                  totalRow: true
+                }, {
+                  field: 'SFZH',
+                  title: '身份证号',
+                  //  width: 90,
+                  sort: true,
+                  totalRow: true
+                }, {
+                  field: 'BANKTYPE',
+                  title: '银行类别',
+                  //  width: 80,
+                  sort: true
+                }, {
+                  field: 'YHKH',
+                  title: '银行卡号',
+                  //    width: 80,
+                  sort: true
+                }, {
+                  field: 'KSBM',
+                  title: '卡识别码',
+                  //    width: 80,
+                  sort: true
+                }, {
+                  field: 'BACKYHKH',
+                  title: '卡管银行卡号',
+                  //  width: 80,
+                  sort: true
+                }, {
+                  field: 'KGSTATUS',
+                  title: '卡管状态'
+                  //    width: 100
+                }, {
+                  field: 'CREATEDATE',
+                  title: '回盘时间',
+                  sort: true
+                  //    width: 100
+                }
+              ]
+            ]
+          });
+        }
+      });
+        //指定允许上传的文件类型
+        upload.render({
+            elem: '#test3'
+            ,url: '' //改成您自己的上传接口
+            ,accept: 'file' //普通文件
+            ,done: function(res){
+                layer.msg('上传成功');
+                console.log(res);
+            }
+        });
+      //执行一个 table 实例
+      tableIns = table.render({
+        elem: '#LAY_table_user',
+        height: 420,
+        url: 'http://127.0.0.1:7001/iface/machine/DealPersonInfosHandle' //数据接口
+          //,where: {sfzh: '612524196805190624', banktype: 'YC', ssqStatus:  '10', areaCode:  '611023', yhkh:  '6217977900064090784'}
+          ,
+        title: '参保人上报制卡详情',
+        method: 'post',
+        defaultToolbar: [''],
+        response: {
+          statusCode: 200 //重新规定成功的状态码为 200，table 组件默认为 0
+        },
+        id: 'testReload',
+        parseData: function(res) { //res 即为原始返回的数据
+          return {
+            "code": res.statusCode, //解析接口状态
+            "msg": res.message, //解析提示文本
+            "count": res.data.count, //解析数据长度
+            "data": res.data.data //解析数据列表
+          };
+        },
+        page: true, //开启分页
+        // limit: 2000,
+        toolbar: '#toolbarDemo' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+          ,
+        totalRow: false //开启合计行
+          ,
+        cols: [
+          [ //表头
+            {
+              type: 'checkbox',
+              fixed: 'left'
+            }, {
+              field: 'id',
+              title: 'ID',
+              sort: true,
+              fixed: 'left',
+              totalRowText: '合计：'
+            }, {
+              field: 'XM',
+              title: '姓名',
+            }, {
+              field: 'SFZH',
+              title: '身份证号',
+              sort: true,
+              totalRow: true
+            }, {
+              field: 'BANKTYPE',
+              title: '银行类别',
+              sort: true
+            }, {
+              field: 'SSQSTATUS',
+              title: '险种',
+              sort: true
+            }, {
+              field: 'YHKH',
+              title: '银行卡号',
+              sort: true
+            }, {
+              field: 'ADDRESS',
+              title: '地址',
+              sort: true,
+              totalRow: true
+            }, {
+              field: 'AREACODE',
+              title: '区域',
+            }, {
+              field: 'PHONE',
+              title: '电话',
+            }, {
+              field: 'KGSTATUS',
+              title: '卡管状态',
+            }
+          ]
+        ]
+      });
+      var $ = layui.$,
+        active = {
+          reload: function() {
+            var sfzh = $('#sfzh');
+            var areaCode = $('#areaCode');
+            var ssqStatus = $('#ssqStatus');
+            var banktype = $('#banktype');
+            var yhkh = $('#yhkh');
+            var kgStatus = $('#kgStatus');
+            //执行重载
+            table.reload('testReload', {
+              page: {
+                curr: 1 //重新从第 1 页开始
+              },
+              where: {
+                sfzh: sfzh.val(),
+                areaCode: areaCode.val(),
+                ssqStatus: ssqStatus.val(),
+                banktype: banktype.val(),
+                yhkh: yhkh.val(),
+                kgStatus: kgStatus.val(),
+              }
+            }, 'data');
+          }
+        };
+
+      $('.demoTable .layui-btn').on('click', function() {
+        var type = $(this).data('type');
+        active[type] ? active[type].call(this) : '';
+      });
+
+      $('.demoTable-backdata .layui-btn').on('click', function() {
+        var sfzh = $('#sfzh_back');
+        var banktype = $('#areaCode_back');
+        var kgStatus = $('#kgStatus_back');
+        var ksbm = $('#banktype_back');
+        var yhkh = $('#yhkh_back');
+        var backYhkh = $('#backYhkh_back');
+        var startDate = startDatepa;
+        var endDate = endDatepa;
+        tableBackDataInfo.reload({
+          where: { //设定异步数据接口的额外参数，任意设
+            sfzh: sfzh.val(),
+            banktype: banktype.val(),
+            kgStatus: kgStatus.val(),
+            ksbm: ksbm.val(),
+            yhkh: yhkh.val(),
+            backYhkh: backYhkh.val(),
+            startDate: startDate,
+            endDate: endDate
+            //…
+          },
+          page: {
+            curr: 1 //重新从第 1 页开始
+          }
+        });
+      });
+
+
+
+
+      var datetimeinfo = laydate.render({
+        elem: '#datetimeinfo',
+        type: 'datetime',
+        range: '&',
+        done: function(value, date, endDate) {
+          startDatepa = value.split('&')[0];
+          endDatepa = value.split('&')[1];
+        }
+      });
+
+
+      //分页
+      laypage.render({
+        elem: 'pageDemo' //分页容器的id
+          ,
+        count: 100 //总页数
+          ,
+        skin: '#1E9FFF' //自定义选中色值
+          //,skip: true //开启跳页
+          ,
+        jump: function(obj, first) {
+          if (!first) {
+            layer.msg('第' + obj.curr + '页', {
+              offset: 'b'
+            });
+          }
+        }
+      });
+
+      //上传
+      upload.render({
+        elem: '#uploadDemo',
+        url: 'https://httpbin.org/post' //改成您自己的上传接口
+          ,
+        done: function(res) {
+          layer.msg('上传成功');
+          layui.$('#uploadDemoView').removeClass('layui-hide').find('img').attr('src', res.files.file);
+          console.log(res)
+        }
+      });
+
+      //滑块
+      var sliderInst = slider.render({
+        elem: '#sliderDemo',
+        input: true //输入框
+      });
+
+      //监听事件
+      table.on('toolbar(user)', function(obj) {
+        var checkStatus = table.checkStatus(obj.config.id);
+        switch (obj.event) {
+          case 'export':
+            layer.msg('导出');
+            var sfzh = $('#sfzh');
+            var areaCode = $('#areaCode');
+            var ssqStatus = $('#ssqStatus');
+            var banktype = $('#banktype');
+            var yhkh = $('#yhkh');
+            var kgStatus = $('#kgStatus');
+            var exportTableIns = table.render({
+              elem: '',
+              height: 420,
+              url: 'http://127.0.0.1:7001/iface/machine/DealPersonInfosHandle' //数据接口
+              ,where: {
+                sfzh: sfzh.val(),
+              banktype: areaCode.val(),
+              ssqStatus: ssqStatus.val(),
+               areaCode: banktype.val(),
+               yhkh:  yhkh.val(),
+               kgStatus: kgStatus.val()
+             },
+              title: '参保人上报制卡详情',
+              method: 'post',
+              defaultToolbar: [''],
+              response: {
+                statusCode: 200 //重新规定成功的状态码为 200，table 组件默认为 0
+              },
+              id: '',
+              parseData: function(res) { //res 即为原始返回的数据
+                return {
+                  "code": res.statusCode, //解析接口状态
+                  "msg": res.message, //解析提示文本
+                  "count": res.data.count, //解析数据长度
+                  "data": res.data.data //解析数据列表
+                };
+              },
+              page: false, //开启分页
+              // limit: 2000,
+              toolbar: '#toolbarDemo' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+                ,
+              totalRow: false //开启合计行
+                ,
+              cols: [
+                [ //表头
+                  {
+                    type: 'checkbox',
+                    fixed: 'left'
+                  }, {
+                    field: 'id',
+                    title: 'ID',
+                    sort: true,
+                    fixed: 'left',
+                    totalRowText: '合计：'
+                  }, {
+                    field: 'XM',
+                    title: '姓名',
+                  }, {
+                    field: 'SFZH',
+                    title: '身份证号',
+                    sort: true,
+                    totalRow: true
+                  }, {
+                    field: 'BANKTYPE',
+                    title: '银行类别',
+                    sort: true
+                  }, {
+                    field: 'SSQSTATUS',
+                    title: '险种',
+                    sort: true
+                  }, {
+                    field: 'YHKH',
+                    title: '银行卡号',
+                    sort: true
+                  }, {
+                    field: 'ADDRESS',
+                    title: '地址',
+                    sort: true,
+                    totalRow: true
+                  }, {
+                    field: 'AREACODE',
+                    title: '区域',
+                  }, {
+                    field: 'PHONE',
+                    title: '电话',
+                  }, {
+                    field: 'KGSTATUS',
+                    title: '卡管状态',
+                  }
+                ]
+              ]
+            });
+            table.exportFile(exportTableIns.config.id, exportTableIns.data,'xls');
+            break;
+        };
+      });
+
+      //底部信息
+      // var footerTpl = lay('#footer')[0].innerHTML;
+      // lay('#footer').html(layui.laytpl(footerTpl).render({}))
+      //   .removeClass('layui-hide');
+    });
+  </script>
+</body>
+
+</html>
