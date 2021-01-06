@@ -220,7 +220,7 @@ public class HttpInvoker {
 		}
 
 		try {
-			//log.info("set utf-8 form entity to httppost");
+			//log.info("set utf-8 form request to httppost");
 			httpost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();

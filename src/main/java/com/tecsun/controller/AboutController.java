@@ -7,9 +7,9 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.metadata.Sheet;
 import com.alibaba.excel.support.ExcelTypeEnum;
-import com.tecsun.entity.User;
-import com.tecsun.entity.UserExportEntity;
-import com.tecsun.entity.UserImportEntity;
+import com.tecsun.bo.UserBo;
+import com.tecsun.request.UserExportReq;
+import com.tecsun.request.UserImportReq;
 import com.tecsun.jpadata.impl.JpaProxyUserRepository;
 import com.tecsun.utils.ModelExcelListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,24 +41,24 @@ public class AboutController {
     }
     @RequestMapping(value = "/")
     public ModelAndView index(Model model) {
-        ModelAndView modelAndView = new ModelAndView("/index");
+        ModelAndView modelAndView = new ModelAndView("index");
         return modelAndView;
     }
     @RequestMapping(value = "/preImportExcel")
     public ModelAndView preImportExcel(Model model) {
-        ModelAndView modelAndView = new ModelAndView("/importExcel");
+        ModelAndView modelAndView = new ModelAndView("importExcel");
         return modelAndView;
     }
     @RequestMapping(value = "/uploadExcel")
     @ResponseBody
     public Map<String, Object> importExcel(@RequestParam("reportFile") MultipartFile file) throws Exception{
         Map<String, Object> ret = new HashMap<String, Object>();
-        List<UserImportEntity> list;
-        List<User> saveList=new ArrayList<>();
+        List<UserImportReq> list;
+        List<UserBo> saveList=new ArrayList<>();
         try {
-            list = EasyExcel.read(file.getInputStream(),UserImportEntity.class,new ModelExcelListener()).sheet().doReadSync();
+            list = EasyExcel.read(file.getInputStream(), UserImportReq.class,new ModelExcelListener()).sheet().doReadSync();
             list.stream().forEach(o->{
-                User user=o.toUser();
+                UserBo user=new UserBo();
                 user.setCreateTime(new Date());
                 saveList.add(user);
             });
@@ -75,16 +75,16 @@ public class AboutController {
     }
     @RequestMapping(value = "/preUserInfos")
     public ModelAndView prequeryuserInfos(Model model) throws Exception{
-        ModelAndView modelAndView = new ModelAndView("/userInfos");
-//        List<User> all = repository.all();
+        ModelAndView modelAndView = new ModelAndView("userInfos");
+//        List<UserBo> all = repository.all();
 //        model.addAttribute("serviceList", all);
         return modelAndView;
     }
     @RequestMapping(value = "/queryUserInfos" ,method=RequestMethod.GET)
     @ResponseBody
-    public List<User> queryuserInfos(@RequestParam("name") String name,@RequestParam("idNum") String idNum) throws Exception{
+    public List<UserBo> queryuserInfos(@RequestParam("name") String name, @RequestParam("idNum") String idNum) throws Exception{
 
-        List<User> all = repository.query(name.replace("\t",""),idNum);
+        List<UserBo> all = repository.query(name.replace("\t",""),idNum);
 
         return all;
     }
@@ -105,14 +105,14 @@ public class AboutController {
             writer = new ExcelWriter(outputStream, ExcelTypeEnum.XLS, true);
 
             //实例化表单
-            Sheet sheet = new Sheet(1, 0, UserExportEntity.class);
+            Sheet sheet = new Sheet(1, 0, UserExportReq.class);
             sheet.setSheetName("目录");
 
             //获取数据
-            List<User> all = repository.all();
-            List<UserExportEntity> exportlist=new ArrayList<>();
+            List<UserBo> all = repository.all();
+            List<UserExportReq> exportlist=new ArrayList<>();
             all.stream().forEach(o->{
-                UserExportEntity userExportEntity= new UserExportEntity(o);
+                UserExportReq userExportEntity= new UserExportReq();
                 exportlist.add(userExportEntity);
             });
 

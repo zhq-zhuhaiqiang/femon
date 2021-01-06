@@ -4,6 +4,7 @@
     <groupId>femon</groupId>
     <artifactId>femon</artifactId>
     <packaging>jar</packaging>
+    <!--<packaging>war</packaging>-->
     <version>0.0.1-SNAPSHOT</version>
     <!--父依赖 -->
     <parent>
@@ -32,31 +33,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>springloaded</artifactId>
-                        <version>1.2.6.RELEASE</version>
-                    </dependency>
-                </dependencies>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                        <configuration>
-                            <classifier>exec</classifier>
-                        </configuration>
-                    </execution>
-                </executions>
-                <configuration>
-                    <!-- <mainClass>com.dhgate.rate.ApplicationSearch</mainClass> -->
-                    <!--指定监听的端口号 -->
-                    <jvmArguments>
-                        -Xdebug
-                        -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=7776
-                    </jvmArguments>
-                </configuration>
+
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -67,10 +44,49 @@
                 </configuration>
             </plugin>
         </plugins>
+        <!-- 打包时将jsp文件拷贝到META-INF目录下-->
+        <resources>
+            <resource>
+
+
+                <!-- 指定resources插件处理哪个目录下的资源文件 -->
+                <directory>src/main/resources</directory>
+                <!--注意此次必须要放在此目录下才能被访问到-->
+                <!--<targetPath>META-INF/resources</targetPath>-->
+                <includes>
+                    <include>**/**</include>
+                </includes>
+                <excludes>
+                <exclude>*.properties</exclude>
+                <!--<exclude>*.xml</exclude>-->
+                </excludes>
+            </resource>
+            <resource>
+
+
+                <!-- 指定resources插件处理哪个目录下的资源文件 -->
+                <directory>src/main/resources</directory>
+                <!--注意此次必须要放在此目录下才能被访问到-->
+                <targetPath>config</targetPath>
+                <includes>
+                    <include>*.properties</include>
+                </includes>
+                <!--<excludes>-->
+                    <!--<exclude>*.properties</exclude>-->
+                    <!--&lt;!&ndash;<exclude>*.xml</exclude>&ndash;&gt;-->
+                <!--</excludes>-->
+            </resource>
+        </resources>
     </build>
 
 
     <dependencies>
+        <dependency>
+            <groupId>tk.mybatis</groupId>
+            <artifactId>mapper-spring-boot-starter</artifactId>
+            <version>2.1.5</version>
+        </dependency>
+
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>easyexcel</artifactId>

@@ -1,4 +1,4 @@
-package com.tecsun.mail;
+package com.tecsun.bo.mail;
 
 import java.util.Properties;
 

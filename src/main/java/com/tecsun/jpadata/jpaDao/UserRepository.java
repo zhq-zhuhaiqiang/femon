@@ -1,14 +1,14 @@
 package com.tecsun.jpadata.jpaDao;
 
-import com.tecsun.entity.User;
+import com.tecsun.bo.UserBo;
 
 import java.util.List;
 
 public interface UserRepository {
 
-	public User save(User user);
-	public void saveList(List<User> list);
+	public UserBo save(UserBo user);
+	public void saveList(List<UserBo> list);
 
-	public List<User> all();
-	public List<User> query(String name,String idNum);
+	public List<UserBo> all();
+	public List<UserBo> query(String name, String idNum);
 }

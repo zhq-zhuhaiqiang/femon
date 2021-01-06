@@ -1,13 +1,12 @@
 package com.tecsun.jpadata.impl;
 
-import com.tecsun.entity.User;
+import com.tecsun.bo.UserBo;
 import com.tecsun.jpadata.entity.UserJapEntity;
 import com.tecsun.jpadata.jpaDao.UserRepository;
 import com.tecsun.jpadata.repository.UserJpaRepository;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -24,15 +23,15 @@ public class JpaProxyUserRepository implements UserRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
-	public User save(User newUser) {
+	public UserBo save(UserBo newUser) {
 		UserJapEntity newEntity = new UserJapEntity(newUser);
 		UserJapEntity savedEntity = jpaRepository.save(newEntity);
-		User savedUser = savedEntity.toUser();
+		UserBo savedUser = savedEntity.toUser();
 		return savedUser;
 	}
 
 	@Override
-	public void saveList(List<User> list) {
+	public void saveList(List<UserBo> list) {
 
 		list.stream().forEach(o->{
 				UserJapEntity newEntity = new UserJapEntity(o);
@@ -42,18 +41,18 @@ public class JpaProxyUserRepository implements UserRepository {
 
 	}
 
-	public List<User> all() {
+	public List<UserBo> all() {
 		List<UserJapEntity> entities = jpaRepository.findAll();
-		List<User> users = new ArrayList<User>(entities.size());
+		List<UserBo> users = new ArrayList<UserBo>(entities.size());
 		for (UserJapEntity entity : entities) {
-			User user = entity.toUser();
+			UserBo user = entity.toUser();
 			users.add(user);
 		}
 		return users;
 	}
 
 	@Override
-	public List<User> query(String name, String idNum) {
+	public List<UserBo> query(String name, String idNum) {
 		UserJapEntity userJapEntity=new UserJapEntity(name,idNum);
         Example<UserJapEntity> example = Example.of(userJapEntity);
 //		ExampleMatcher exampleMatcher = ExampleMatcher.matching();
@@ -84,9 +83,9 @@ public class JpaProxyUserRepository implements UserRepository {
             query.setParameter("idNum", "%"+idNum+"%");
         }
         List<UserJapEntity> entities = query.getResultList();
-		List<User> users = new ArrayList<User>(entities.size());
+		List<UserBo> users = new ArrayList<UserBo>(entities.size());
 		for (UserJapEntity entity : entities) {
-			User user = entity.toUser();
+			UserBo user = entity.toUser();
 			users.add(user);
 		}
 		return users;

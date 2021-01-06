@@ -1,6 +1,6 @@
 package com.tecsun.jpadata.entity;
 
-import com.tecsun.entity.User;
+import com.tecsun.bo.UserBo;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -25,7 +25,7 @@ public class UserJapEntity implements Serializable {
     private String  status;
     @Column
     private Date createTime;
-    public UserJapEntity(final User user) {
+    public UserJapEntity(final UserBo user) {
         this.userId = user.getUserId();
         this.name = user.getName();
         this.idNum = user.getIdNum();
@@ -41,8 +41,8 @@ public class UserJapEntity implements Serializable {
         this.idNum=idNum;
 
     }
-    public User toUser() {
-        User user = new User();
+    public UserBo toUser() {
+        UserBo user = new UserBo();
         user.setUserId(userId);
         user.setName(name);
         user.setAge(age);
